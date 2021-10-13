@@ -2,14 +2,14 @@ package com.example.projectmcc;
 
 public class Data {
     public String condition;
-    public double currentTemp;
-    public double minTemp;
-    public double maxTemp;
-    public double feelsLike;
-    public double pressure;
-    public double humidity;
+    public String currentTemp;
+    public String minTemp;
+    public String maxTemp;
+    public String feelsLike;
+    public String pressure;
+    public String humidity;
 
-    Data(String condition,double currentTemp,double minTemp,double maxTemp ,double feelsLike,double pressure,double humidity)
+    Data(String condition,String currentTemp,String minTemp,String maxTemp ,String feelsLike,String pressure,String humidity)
     {
         this.condition=condition;
         this.currentTemp=currentTemp;
@@ -18,5 +18,33 @@ public class Data {
         this.feelsLike=feelsLike;
         this.pressure=pressure;
         this.humidity=humidity;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public String getCurrentTemp() {
+        return currentTemp;
+    }
+
+    public String getMinTemp() {
+        return minTemp;
+    }
+
+    public String getMaxTemp() {
+        return maxTemp;
+    }
+
+    public String getFeelsLike() {
+        return feelsLike;
+    }
+
+    public String getPressure() {
+        return pressure;
+    }
+
+    public String getHumidity() {
+        return humidity;
     }
 }

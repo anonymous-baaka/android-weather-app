@@ -12,6 +12,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -37,19 +38,21 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
-    public int isSet=0;
     FusedLocationProviderClient client;
     LatLng latLng;
     DecimalFormat df=new DecimalFormat("#.##");
     String URL="";
 
+    static ListView mlistView;
     static TextView tv_condition,tv_max,tv_min;
     static ImageView iv_condition;
-
+    public  Data[] dataList=new Data[7];
+    WeatherListView adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         client = LocationServices.getFusedLocationProviderClient(this);
 
@@ -57,14 +60,16 @@ public class MainActivity extends AppCompatActivity {
         tv_max=(TextView)findViewById(R.id.tv_temphigh);
         tv_min=(TextView)findViewById(R.id.tv_templow);
         iv_condition=(ImageView)findViewById(R.id.iv_condition);
+        mlistView=(ListView) findViewById(R.id.listView);
 
         Dexter.withContext(getApplicationContext())
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-                        getMyLocation();
 
+                        getMyLocation();
+                        createView();
                     }
 
                     @Override
@@ -77,6 +82,24 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }).check();
+
+        ExecutorService executor= Executors.newSingleThreadExecutor();
+        Handler handler=new Handler(Looper.getMainLooper());
+
+        /*executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                WeatherListView adapter = new WeatherListView(MainActivity.this,R.layout.adapter_view_layout, dataList);
+                mlistView.setAdapter(adapter);
+            }
+        });*/
+
+    }
+
+    public void createView(){
+        WeatherListView adapter = new WeatherListView(MainActivity.this,R.layout.adapter_view_layout, this.dataList);
+        if(adapter!=null)
+        mlistView.setAdapter(adapter);
     }
 
     public void getMyLocation()
@@ -110,46 +133,46 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 data[0] =FetchData.getter();
-                                /*for(int i=0;i<7;i++)
-                                {
-                                    Log.e("TAG", "onSuccess: "+ data[0][i].condition+" "+ data[0][i].maxTemp );
-                                }*/
+
+
                             }
                         });
                     }
                 });
-
-
-
-                /*try {
-                    parseJSON(jsonObject);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }*/
+                //WeatherListView adapter = new WeatherListView(MainActivity.this,R.layout.adapter_view_layout, dataList);
+                //mlistView.setAdapter(adapter);
             }
             });
     }
 
-    public void parseJSON(JSONObject jsonObject) throws JSONException {
-        //JSONObject jsonCurrent= jsonObject.getJSONObject("current");
-
+    public void setter(Data data,int index)
+    {
+        dataList[index]=data;
     }
 
-    public static void setter(String str_cond,String str_max,String str_min)
+    public void elementsSetter()
     {
-        tv_condition.setText(str_cond);
-        tv_max.setText(str_max);
-        tv_min.setText(str_min);
+        for(int i=0;i<1;i++)
+        {
+            Data data=dataList[i];
+            tv_condition.setText(data.condition);
+            tv_max.setText(data.currentTemp);
+            tv_min.setText(data.minTemp);
 
-        if(str_cond=="Rain")
-        iv_condition.setImageResource(R.drawable.ic_rain);
-        else if(str_cond=="Clear")
-            iv_condition.setImageResource(R.drawable.ic_clear);
-        else if(str_cond=="Cloudy")
-            iv_condition.setImageResource(R.drawable.ic_cloudy);
-        else if(str_cond=="Storm")
-            iv_condition.setImageResource(R.drawable.ic_storm);
-        else if(str_cond=="Snow")
-            iv_condition.setImageResource(R.drawable.ic_snow);
+            String str_cond=data.condition;
+            if(str_cond=="Rain")
+                iv_condition.setImageResource(R.drawable.ic_rain);
+            else if(str_cond=="Clear")
+                iv_condition.setImageResource(R.drawable.ic_clear);
+            else if(str_cond=="Cloudy")
+                iv_condition.setImageResource(R.drawable.ic_cloudy);
+            else if(str_cond=="Storm")
+                iv_condition.setImageResource(R.drawable.ic_storm);
+            else if(str_cond=="Snow")
+                iv_condition.setImageResource(R.drawable.ic_snow);
+            else if(str_cond=="Thunderstorm")
+                iv_condition.setImageResource(R.drawable.ic_storm);
+        }
+
     }
 }

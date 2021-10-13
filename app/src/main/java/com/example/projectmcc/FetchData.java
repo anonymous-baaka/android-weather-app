@@ -1,8 +1,11 @@
 package com.example.projectmcc;
 
+import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +23,7 @@ import org.json.JSONObject;
 import java.text.DecimalFormat;
 
 
-public class FetchData  {
+public class FetchData  extends Application {
     public static Data data[]=new Data[7];
 
 
@@ -54,7 +57,7 @@ public class FetchData  {
                     pressure=jsonOcurrent.getDouble("pressure");
                     humidity=jsonOcurrent.getDouble("humidity");
 
-                    data[0]=new Data(condition,currentTemp,minTemp,maxTemp,feelsLike,pressure,humidity);
+                    data[0]=new Data(condition,df.format(currentTemp-275),df.format(minTemp-275),df.format(maxTemp-275),df.format(feelsLike-275),df.format(pressure),df.format(humidity));
 
                     //rest
                     for(int i=1;i<7;i++)
@@ -67,12 +70,14 @@ public class FetchData  {
                         pressure=jsonDaily.getJSONObject(i).getDouble("pressure");
                         humidity=jsonDaily.getJSONObject(i).getDouble("humidity");
 
-                        data[i]=new Data(condition,currentTemp,minTemp,maxTemp,feelsLike,pressure,humidity);
+                        data[i]=new Data(condition,df.format(currentTemp-275),df.format(minTemp-275),df.format(maxTemp-275),df.format(feelsLike-275),df.format(pressure),df.format(humidity));
                     }
+                    MainActivity mainActivity=new MainActivity();
                     for(int i=0;i<7;i++)
                     {
-                        Log.e("TAG", "onSuccess: "+data[i].condition+" "+data[i].maxTemp );
+                        mainActivity.setter(data[i],i);
                     }
+                    mainActivity.elementsSetter();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
