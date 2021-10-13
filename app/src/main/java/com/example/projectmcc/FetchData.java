@@ -43,6 +43,7 @@ public class FetchData  extends Application {
                      double feelsLike;
                      double pressure;
                      double humidity;
+                     String date;
 
                     JSONObject jsonResponse = new JSONObject(response);
                     JSONArray jsonDaily=jsonResponse.getJSONArray("daily");
@@ -56,8 +57,9 @@ public class FetchData  extends Application {
                     feelsLike=jsonOcurrent.getDouble("feels_like");
                     pressure=jsonOcurrent.getDouble("pressure");
                     humidity=jsonOcurrent.getDouble("humidity");
+                    date=jsonDaily.getJSONObject(0).getString("dt");
 
-                    data[0]=new Data(condition,df.format(currentTemp-275),df.format(minTemp-275),df.format(maxTemp-275),df.format(feelsLike-275),df.format(pressure),df.format(humidity));
+                    data[0]=new Data(condition,df.format(currentTemp-275),df.format(minTemp-275),df.format(maxTemp-275),df.format(feelsLike-275),df.format(pressure),df.format(humidity),date);
 
                     //rest
                     for(int i=1;i<7;i++)
@@ -69,16 +71,19 @@ public class FetchData  extends Application {
                         feelsLike=-275;
                         pressure=jsonDaily.getJSONObject(i).getDouble("pressure");
                         humidity=jsonDaily.getJSONObject(i).getDouble("humidity");
-
-                        data[i]=new Data(condition,df.format(currentTemp-275),df.format(minTemp-275),df.format(maxTemp-275),df.format(feelsLike-275),df.format(pressure),df.format(humidity));
+                        date=jsonDaily.getJSONObject(i).getString("dt");
+                        data[i]=new Data(condition,df.format(currentTemp-275),df.format(minTemp-275),df.format(maxTemp-275),df.format(feelsLike-275),df.format(pressure),df.format(humidity),date);
                     }
                     MainActivity mainActivity=new MainActivity();
                     for(int i=0;i<7;i++)
                     {
                         mainActivity.setter(data[i],i);
                     }
+
+
                     mainActivity.elementsSetter();
 
+                    mainActivity.createView();
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

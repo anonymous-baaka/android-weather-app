@@ -29,6 +29,7 @@ public class WeatherListView extends ArrayAdapter<Data> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         LayoutInflater inflater= LayoutInflater.from(mcontext);
+
         convertView=inflater.inflate(mResource,parent,false);
 
         ImageView iv_condition=convertView.findViewById(R.id.other_icon);

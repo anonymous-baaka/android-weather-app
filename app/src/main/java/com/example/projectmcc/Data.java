@@ -8,8 +8,9 @@ public class Data {
     public String feelsLike;
     public String pressure;
     public String humidity;
+    public String date;
 
-    Data(String condition,String currentTemp,String minTemp,String maxTemp ,String feelsLike,String pressure,String humidity)
+    Data(String condition,String currentTemp,String minTemp,String maxTemp ,String feelsLike,String pressure,String humidity,String date)
     {
         this.condition=condition;
         this.currentTemp=currentTemp;
@@ -18,6 +19,7 @@ public class Data {
         this.feelsLike=feelsLike;
         this.pressure=pressure;
         this.humidity=humidity;
+        this.date=date;
     }
 
     public String getCondition() {
@@ -46,5 +48,9 @@ public class Data {
 
     public String getHumidity() {
         return humidity;
+    }
+    public String getDate()
+    {
+        return date;
     }
 }

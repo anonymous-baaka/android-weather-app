@@ -66,19 +66,20 @@
         android:layout_marginTop="60dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_today"
-        tools:srcCompat="@color/purple_200"
-        tools:visibility="visible"
-        android:src="@drawable/ic_clear"/>
+        android:src="@drawable/ic_fog"/>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/listView"
-        android:layout_width="372dp"
-        android:layout_height="363dp"
+        android:layout_width="375dp"
+        android:layout_height="404dp"
         android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
         android:layout_marginBottom="10dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_condition" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

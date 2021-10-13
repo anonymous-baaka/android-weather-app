@@ -2,6 +2,7 @@ package com.example.projectmcc;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -43,9 +44,10 @@ public class MainActivity extends AppCompatActivity {
     DecimalFormat df=new DecimalFormat("#.##");
     String URL="";
 
-    static ListView mlistView;
+    static RecyclerView mlistView;
     static TextView tv_condition,tv_max,tv_min;
     static ImageView iv_condition;
+    ImageView iv_condition2;
     public  Data[] dataList=new Data[7];
     WeatherListView adapter;
     @Override
@@ -60,7 +62,9 @@ public class MainActivity extends AppCompatActivity {
         tv_max=(TextView)findViewById(R.id.tv_temphigh);
         tv_min=(TextView)findViewById(R.id.tv_templow);
         iv_condition=(ImageView)findViewById(R.id.iv_condition);
-        mlistView=(ListView) findViewById(R.id.listView);
+        iv_condition2=(ImageView)findViewById(R.id.iv_condition);
+        mlistView= findViewById(R.id.listView);
+
 
         Dexter.withContext(getApplicationContext())
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -69,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
 
                         getMyLocation();
-                        createView();
+                        //createView();
                     }
 
                     @Override
@@ -85,7 +89,6 @@ public class MainActivity extends AppCompatActivity {
 
         ExecutorService executor= Executors.newSingleThreadExecutor();
         Handler handler=new Handler(Looper.getMainLooper());
-
         /*executor.execute(new Runnable() {
             @Override
             public void run() {
@@ -97,8 +100,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createView(){
-        WeatherListView adapter = new WeatherListView(MainActivity.this,R.layout.adapter_view_layout, this.dataList);
-        if(adapter!=null)
+
+        recylerAdapter adapter = new recylerAdapter(dataList);
         mlistView.setAdapter(adapter);
     }
 
@@ -139,8 +142,6 @@ public class MainActivity extends AppCompatActivity {
                         });
                     }
                 });
-                //WeatherListView adapter = new WeatherListView(MainActivity.this,R.layout.adapter_view_layout, dataList);
-                //mlistView.setAdapter(adapter);
             }
             });
     }
@@ -148,6 +149,7 @@ public class MainActivity extends AppCompatActivity {
     public void setter(Data data,int index)
     {
         dataList[index]=data;
+
     }
 
     public void elementsSetter()
@@ -161,18 +163,21 @@ public class MainActivity extends AppCompatActivity {
 
             String str_cond=data.condition;
             if(str_cond=="Rain")
-                iv_condition.setImageResource(R.drawable.ic_rain);
+                iv_condition2.setImageResource(R.drawable.ic_rain);
             else if(str_cond=="Clear")
-                iv_condition.setImageResource(R.drawable.ic_clear);
-            else if(str_cond=="Cloudy")
-                iv_condition.setImageResource(R.drawable.ic_cloudy);
+                iv_condition2.setImageResource(R.drawable.ic_clear);
+            else if(str_cond=="Clouds")
+                iv_condition2.setImageResource(R.drawable.ic_cloudy);
             else if(str_cond=="Storm")
-                iv_condition.setImageResource(R.drawable.ic_storm);
+                iv_condition2.setImageResource(R.drawable.ic_storm);
             else if(str_cond=="Snow")
-                iv_condition.setImageResource(R.drawable.ic_snow);
+                iv_condition2.setImageResource(R.drawable.ic_snow);
             else if(str_cond=="Thunderstorm")
-                iv_condition.setImageResource(R.drawable.ic_storm);
+                iv_condition2.setImageResource(R.drawable.ic_storm);
+            else if(str_cond=="Haze")
+                iv_condition2.setImageResource(R.drawable.ic_fog);
         }
+        return;
 
     }
 }
