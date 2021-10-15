@@ -39,7 +39,7 @@ public class recylerAdapter extends RecyclerView.Adapter<recylerAdapter.Holder> 
         holder.maxTemp.setText(list[position].getMaxTemp());
         holder.minxTemp.setText(list[position].getMinTemp());
         holder.condition.setText(list[position].getCondition());
-        holder.date.setText(parseDate(list[position].getDate()));
+        holder.date.setText(parseDate(list[position].getDate(),position));
 
         String str_cond = list[position].getCondition();
         int resId = -1;
@@ -92,10 +92,26 @@ public class recylerAdapter extends RecyclerView.Adapter<recylerAdapter.Holder> 
         }
     }
 
-    String parseDate(String ip)
+    String parseDate(String ip,int index)
     {
+        if(index==0)
+            return "Today";
+        else if(index==1)
+            return "Tomorrow";
         ip+="000";
         Date date= new Date(Long.parseLong(ip));
-        return  date.toString();
+        String op="";
+        int d=date.getDay();
+        switch(d){
+            case 0: op="Sunday";break;
+            case 1: op="Monday";break;
+            case 2: op="Tuesday";break;
+            case 3: op="Wednesday";break;
+            case 4: op="Thursday";break;
+            case 5: op="Friday";break;
+            case 6: op="Saturday";break;
+        }
+
+        return op;
     }
 }
