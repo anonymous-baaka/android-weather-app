@@ -1,5 +1,8 @@
 package com.example.projectmcc;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Parcelable;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,10 +24,13 @@ import java.util.List;
 
 public class recylerAdapter extends RecyclerView.Adapter<recylerAdapter.Holder> {
 
-    private final Data[] list;
+    private   ClickListener clickListener;
+    public static Data[] list;
+    private  Context context;
 
-    recylerAdapter(Data[] list) {
+    recylerAdapter(Data[] list,ClickListener listener) {
         this.list = list;
+        //this.clickListener=listener;
     }
 
     @NonNull
@@ -75,7 +82,7 @@ public class recylerAdapter extends RecyclerView.Adapter<recylerAdapter.Holder> 
         return list.length;
     }
 
-    class Holder extends RecyclerView.ViewHolder {
+    public class Holder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView date;
         TextView condition;
         TextView maxTemp;
@@ -89,7 +96,23 @@ public class recylerAdapter extends RecyclerView.Adapter<recylerAdapter.Holder> 
             maxTemp = itemView.findViewById(R.id.maxTemp);
             minxTemp = itemView.findViewById(R.id.mintemp);
             iv_condition = itemView.findViewById(R.id.other_icon);
+
+            context=itemView.getContext();
+            itemView.setOnClickListener(this);
         }
+        @Override
+        public void onClick(View v)
+        {
+            //clickListener.onItemClick(getAdapterPosition(),v);
+            Intent intent;
+            intent = new Intent(context,DetailedView.class);
+            intent.putExtra("data", list[getAdapterPosition()]);
+            context.startActivity(intent);
+        }
+    }
+
+    public interface ClickListener{
+        void onItemClick(int position,View v);
     }
 
     String parseDate(String ip,int index)
@@ -113,5 +136,10 @@ public class recylerAdapter extends RecyclerView.Adapter<recylerAdapter.Holder> 
         }
 
         return op;
+    }
+
+    public static Data getDataAtPosition(int index)
+    {
+        return list[index];
     }
 }

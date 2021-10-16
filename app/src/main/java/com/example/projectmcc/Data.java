@@ -1,6 +1,9 @@
 package com.example.projectmcc;
 
-public class Data {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Data implements Parcelable {
     public String condition;
     public String currentTemp;
     public String minTemp;
@@ -21,6 +24,29 @@ public class Data {
         this.humidity=humidity;
         this.date=date;
     }
+
+    protected Data(Parcel in) {
+        condition = in.readString();
+        currentTemp = in.readString();
+        minTemp = in.readString();
+        maxTemp = in.readString();
+        feelsLike = in.readString();
+        pressure = in.readString();
+        humidity = in.readString();
+        date = in.readString();
+    }
+
+    public static final Creator<Data> CREATOR = new Creator<Data>() {
+        @Override
+        public Data createFromParcel(Parcel in) {
+            return new Data(in);
+        }
+
+        @Override
+        public Data[] newArray(int size) {
+            return new Data[size];
+        }
+    };
 
     public String getCondition() {
         return condition;
@@ -52,5 +78,22 @@ public class Data {
     public String getDate()
     {
         return date;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(condition);
+        dest.writeString(currentTemp);
+        dest.writeString(minTemp);
+        dest.writeString(maxTemp);
+        dest.writeString(feelsLike);
+        dest.writeString(pressure);
+        dest.writeString(humidity);
+        dest.writeString(date);
     }
 }

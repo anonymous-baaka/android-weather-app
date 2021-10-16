@@ -83,7 +83,7 @@ public class FetchData  extends Application {
 
                     mainActivity.elementsSetter();
 
-                    mainActivity.createView();
+                    mainActivity.createView(mcontext);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

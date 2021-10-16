@@ -5,16 +5,21 @@ import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
@@ -50,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
     ImageView iv_condition2;
     public  Data[] dataList=new Data[7];
     WeatherListView adapter;
+    private recylerAdapter.ClickListener listener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,8 +70,10 @@ public class MainActivity extends AppCompatActivity {
         tv_min=(TextView)findViewById(R.id.tv_templow);
         iv_condition=(ImageView)findViewById(R.id.iv_condition);
         iv_condition2=(ImageView)findViewById(R.id.iv_condition);
-        mlistView= findViewById(R.id.listView);
 
+        Context context=getApplicationContext();
+
+        mlistView= findViewById(R.id.listView);
 
         Dexter.withContext(getApplicationContext())
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -72,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
 
-                        getMyLocation();
+                        getMyLocation(context);
                         //createView();
                     }
 
@@ -86,26 +95,33 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 }).check();
+    }
 
-        ExecutorService executor= Executors.newSingleThreadExecutor();
-        Handler handler=new Handler(Looper.getMainLooper());
-        /*executor.execute(new Runnable() {
+    public void createView(Context context){
+
+        listener=new recylerAdapter.ClickListener() {
             @Override
-            public void run() {
-                WeatherListView adapter = new WeatherListView(MainActivity.this,R.layout.adapter_view_layout, dataList);
-                mlistView.setAdapter(adapter);
+            public void onItemClick(int position, View v) {
+                Intent intent = new Intent(MainActivity.this,DetailedView.class);
+                //intent.putExtra("data", (Parcelable) recylerAdapter.getDataAtPosition(position));
+                startActivity(intent);
+            }
+        };
+
+        recylerAdapter adapter = new recylerAdapter(dataList,listener);
+        /*adapter.setOnItemClickListener(new recylerAdapter.ClickListener() {
+            @Override
+            public void onItemClick(int position, View v) {
+                Intent intent = new Intent(getApplicationContext(),DetailedView.class);
+                intent.putExtra("data", (Parcelable) recylerAdapter.getDataAtPosition(position));
+                startActivity(intent);
             }
         });*/
 
-    }
-
-    public void createView(){
-
-        recylerAdapter adapter = new recylerAdapter(dataList);
         mlistView.setAdapter(adapter);
     }
 
-    public void getMyLocation()
+    public void getMyLocation(Context context)
     {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
             return;
@@ -130,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         FetchData fetchData=new FetchData();
-                        FetchData.getData(getApplicationContext(),URL);
+                        FetchData.getData(context,URL);
 
                         handler.post(new Runnable() {
                             @Override
@@ -162,20 +178,22 @@ public class MainActivity extends AppCompatActivity {
             tv_min.setText(data.minTemp);
 
             String str_cond=data.condition;
-            if(str_cond=="Rain")
-                iv_condition2.setImageResource(R.drawable.ic_rain);
-            else if(str_cond=="Clear")
-                iv_condition2.setImageResource(R.drawable.ic_clear);
-            else if(str_cond=="Clouds")
-                iv_condition2.setImageResource(R.drawable.ic_cloudy);
-            else if(str_cond=="Storm")
-                iv_condition2.setImageResource(R.drawable.ic_storm);
-            else if(str_cond=="Snow")
-                iv_condition2.setImageResource(R.drawable.ic_snow);
-            else if(str_cond=="Thunderstorm")
-                iv_condition2.setImageResource(R.drawable.ic_storm);
-            else if(str_cond=="Haze")
-                iv_condition2.setImageResource(R.drawable.ic_fog);
+            if(str_cond.equals("Rain"))
+                iv_condition.setImageResource(R.drawable.ic_rain);
+            else if(str_cond.equals("Clear"))
+                iv_condition.setImageResource(R.drawable.ic_clear);
+            else if(str_cond.equals("Clouds"))
+                iv_condition.setImageResource(R.drawable.ic_cloudy);
+            else if(str_cond.equals("Storm"))
+                iv_condition.setImageResource(R.drawable.ic_storm);
+            else if(str_cond.equals("Snow"))
+                iv_condition.setImageResource(R.drawable.ic_snow);
+            else if(str_cond.equals("Thunderstorm"))
+                iv_condition.setImageResource(R.drawable.ic_storm);
+            else if(str_cond.equals("Haze"))
+                iv_condition.setImageResource(R.drawable.ic_fog);
+            else if(str_cond.equals("Smoke"))
+                iv_condition.setImageResource(R.drawable.ic_fog);
         }
         return;
 
