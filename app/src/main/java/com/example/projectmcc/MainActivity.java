@@ -1,8 +1,11 @@
 package com.example.projectmcc;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.content.Context;
@@ -16,6 +19,7 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -44,6 +48,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
+
+    SwipeRefreshLayout swipeRefreshLayout;
     FusedLocationProviderClient client;
     LatLng latLng;
     DecimalFormat df=new DecimalFormat("#.##");
@@ -64,6 +70,17 @@ public class MainActivity extends AppCompatActivity {
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         client = LocationServices.getFusedLocationProviderClient(this);
+
+        swipeRefreshLayout=findViewById(R.id.swipe_refresh);
+        swipeRefreshLayout.setNestedScrollingEnabled(true);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                finish();
+                startActivity(getIntent());
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
 
         tv_condition=(TextView) findViewById(R.id.tv_condition);
         tv_max=(TextView)findViewById(R.id.tv_temphigh);
