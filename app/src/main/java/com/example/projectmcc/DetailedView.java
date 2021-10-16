@@ -33,8 +33,8 @@ public class DetailedView extends AppCompatActivity {
         tv_condition.setText(data.getCondition());
         tv_max.setText(data.getMaxTemp());
         tv_min.setText(data.getMinTemp());
-        tv_pressure.setText(data.getPressure());
-        tv_humidity.setText(data.getHumidity());
+        tv_pressure.setText(data.getPressure()+" hPa");
+        tv_humidity.setText(data.getHumidity()+" %");
         tv_day.setText(parseDate(data.getDate()));
 
         String str_cond=data.getCondition();
